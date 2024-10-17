@@ -1,5 +1,12 @@
 @extends('components.layout')
 @section('content')
+@if (count($books))
+    <div class="container mt-5">
+        <div class="alert alert-danger" role="alert">
+            Data buku {{$search}} ditemukan
+        </div>
+        <a href="/buku" class="btn btn-warning">kembali</a>
+    </div>
     <div class="container mt-5">
         <!-- Tombol Create -->
         <div class="mb-3">
@@ -7,16 +14,10 @@
                 Create
             </a>
         </div>
-        <form action="{{route('search')}}" method="GET">
-            @csrf
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Cari buku" name="search">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Cari</button>
-            </div>
         @if (@session('status'))
-            <script>
-                alert('{{ session('status') }}');
-            </script>
+        <script>
+            alert('{{ session('status') }}');
+        </script>
         @endif
         <table class="table table-bordered">
             <thead class="thead-light">
@@ -64,4 +65,13 @@
             {{ $books->links('pagination::bootstrap-5') }}
         </div>
     </div>
+@else
+    <div class="container mt-5">
+        <div class="alert alert-danger" role="alert">
+            Data buku {{$search}} tidak ditemukan
+        </div>
+        <a href="/buku" class="btn btn-warning">kembali</a>
+    </div>
+@endif
+
 @endsection
