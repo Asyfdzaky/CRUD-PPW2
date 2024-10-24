@@ -8,12 +8,10 @@ use Illuminate\Http\Request;
 class BooksController extends Controller
 {
     public function index(){
-        $batas = 3;
-        $books = Books::orderBy('id', 'desc')->paginate($batas);
-        $no = $batas * ($books->currentPage() - 1);
+        $books = Books::all();
         $totalBooks = Books::count();
         $totalHarga = Books::sum('harga');
-        return view('index', compact('books', 'no', 'totalBooks', 'totalHarga'));
+        return view('index', compact('books',  'totalBooks', 'totalHarga'));
     }
 
     public function create(){
