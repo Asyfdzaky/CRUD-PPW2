@@ -1,9 +1,11 @@
 <?php
 
-    namespace App\Http\Controllers\Auth;
 
+    namespace App\Http\Controllers\Auth;
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
+    use App\Mail\RegistrationSuccess;
+    use Illuminate\Support\Facades\Mail;
     use App\Models\User; // Assuming you are using the User model
     use Illuminate\Support\Facades\Hash;
     use Illuminate\Support\Facades\Auth;
@@ -46,10 +48,11 @@ class LoginRegisterController extends Controller
             ]);
 
             // Create a new user
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'level' => 'user',
                 'email_verified_at'=> now()
             ]);
 
@@ -59,6 +62,8 @@ class LoginRegisterController extends Controller
 
             // Regenerate session
             $request->session()->regenerate();
+
+            Mail::to($user->email)->send(new RegistrationSuccess($user));
 
             // Redirect to dashboard with success message
             return redirect('/buku')->with('login', 'You have successfully registered & logged in!');
@@ -108,17 +113,7 @@ class LoginRegisterController extends Controller
         *
         * @return \Illuminate\Http\Response
         */
-        // public function dashboard()
-        // {
-        //     if (Auth::check()) {
-        //         return redirect()->route('dashboard')->with('login', 'You have successfully logged in!');
-        //     }
-
-        //     return redirect()->route('dashboard')
-        //         ->withErrors([
-        //             'email' => 'Please login to access the dashboard.',
-        //         ])->onlyInput('email');
-        // }
+        
 
         /**
         * Log out the user from the application.
