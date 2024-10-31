@@ -22,14 +22,14 @@
         </div>
     </div>
     <!-- Tombol Create -->
-    @auth
+    
+    @if (Auth::User()->level == 'admin')
     <div class="mb-3">
         <a href="{{ route('create') }}" class="btn btn-primary">
             Create
         </a>
     </div>
-    @endauth
-
+    @endif
     @if (@session('status'))
         <script>
             alert('{{ session('status') }}');
@@ -46,6 +46,7 @@
                 <th scope="col">Harga</th>
                 <th scope="col">Tanggal Terbit</th>
                 <th scope="col">Aksi</th>
+
             </tr>
         </thead>
         <tbody>
@@ -59,7 +60,7 @@
                 <td>{{ "Rp" . number_format($book->harga, 2, ',', '.') }}</td>
                 <td>{{ $book->tanggal_terbit }}</td>
 
-                @if (Auth::User())
+                @if (Auth::User()->level == 'admin')
                 <td>
                     <!-- Form untuk Delete -->
                     <form action="{{ route('destroy', $book->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')" class="d-inline">
