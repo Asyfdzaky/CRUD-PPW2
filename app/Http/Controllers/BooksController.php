@@ -32,7 +32,7 @@ class BooksController extends Controller
         $books->tanggal_terbit = $request->tanggal_terbit;
         $books->save();
 
-        return redirect('/buku')->with('status', 'Data Buku Berhasil Ditambahkan');
+        return redirect()->route('buku')->with('success', 'Buku berhasil ditambahkan!');
     }
     public function search(Request $request){
         $batas = 5;
