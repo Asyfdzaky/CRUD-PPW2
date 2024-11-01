@@ -2,8 +2,7 @@
 @section('content')
 <div class="container mt-5">
     <h4 class="mb-4">Create Data</h4>
-
-    <form action="{{ route('store') }}" method="POST">
+    <form action="{{ route('store.buku') }}" method="POST">
         @csrf
         <!-- Title -->
         <div class="mb-3">

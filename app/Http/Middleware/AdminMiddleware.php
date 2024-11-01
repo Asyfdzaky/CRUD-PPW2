@@ -16,13 +16,9 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
 {   
-    // Memeriksa apakah pengguna sedang login dan memiliki level admin
-    if (Auth::check() && Auth::user()->level == 'admin') {
-        // Lanjutkan ke rute berikutnya jika pengguna adalah admin
-        return $next($request);
+    if (Auth::check() && Auth::user()->level != 'admin') {
+        return redirect()->back(); // Mengembalikan pengguna non-admin
     }
-    
-    // Jika bukan admin, arahkan kembali atau tampilkan pesan kesalahan
-    return redirect()->route('home')->with('error', 'Akses ditolak. Anda bukan admin.');
+    return $next($request); // Melanjutkan jika pengguna adalah admin
 }
 }

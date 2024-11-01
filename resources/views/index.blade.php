@@ -3,10 +3,7 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
 <div class="container mt-5">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+
                 <div class="card-body">
                     @if ($message = Session::get('success'))
                         <div class="alert alert-success">
@@ -18,9 +15,6 @@
                         </div>
                     @endif
                 </div>
-            </div>
-        </div>
-    </div>
     <!-- Tombol Create -->
     
     @if (Auth::User()->level == 'admin')
@@ -46,7 +40,6 @@
                 <th scope="col">Harga</th>
                 <th scope="col">Tanggal Terbit</th>
                 <th scope="col">Aksi</th>
-
             </tr>
         </thead>
         <tbody>
