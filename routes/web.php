@@ -13,11 +13,13 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/buku', [BooksController::class, 'index'])->name('buku');
     Route::get('/buku/search', [BooksController::class, 'search'])->name('search');
+    Route::get('/buku/{id}/detail', [BooksController::class, 'show'])->name('books.show');
+
     // Grup rute khusus admin dengan middleware 'auth' dan 'admin'
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/buku/create', [BooksController::class, 'create'])->name('create');
         Route::delete('/buku/{id}', [BooksController::class, 'destroy'])->name('destroy');
-        Route::post('/buku', [BooksController::class, 'store'])->name('store');
+        Route::post('/store-buku', [BooksController::class, 'store'])->name('buku.store');
         Route::get('/buku/{id}/edit', [BooksController::class, 'edit'])->name('edit');
         Route::put('/buku/{id}/update', [BooksController::class, 'update'])->name('update');
     });

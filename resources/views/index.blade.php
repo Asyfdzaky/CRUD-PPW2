@@ -41,6 +41,7 @@
             <tr class="table-primary">
                 <th scope="col">NO</th>
                 <th scope="col">ID</th>
+                <th scope="col">Gambar</th>
                 <th scope="col">Judul</th>
                 <th scope="col">Penulis</th>
                 <th scope="col">Harga</th>
@@ -55,25 +56,30 @@
             <tr>
                 <th scope="row">{{ $index + 1 }}</th>
                 <td>{{ $book->id }}</td>
+                <td>
+                    <img src="{{ asset('storage/img/'.$book->image) }}" class="rounded"
+                    style="width: 150px">
+                </td>
                 <td>{{ $book->title }}</td>
                 <td>{{ $book->author }}</td>
                 <td>{{ "Rp" . number_format($book->harga, 2, ',', '.') }}</td>
                 <td>{{ $book->tanggal_terbit }}</td>
 
-                @if (Auth::User()->level == 'admin')
+                
                 <td>
-                    <!-- Form untuk Delete -->
-                    <form action="{{ route('destroy', $book->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                    <!-- Tombol Edit -->
-                    <a href="{{ route('edit', $book->id) }}" class="btn btn-info btn-sm">Edit</a>
-                </td>
-                @else
-                <td></td>
-                @endif
+                    @if (Auth::User()->level == 'admin')
+                        <!-- Form untuk Delete -->
+                        <form action="{{ route('destroy', $book->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        <!-- Tombol Edit -->
+                        <a href="{{ route('edit', $book->id) }}" class="btn btn-info btn-sm">Edit</a>
+                    @endif
+                    <!-- Tombol Detail yang sama untuk Admin dan User -->
+                    <a href="{{ route('books.show', $book->id) }}" class="btn btn-primary btn-sm">Detail</a>
+                </td>   
             </tr>
             @endforeach
         </tbody>
