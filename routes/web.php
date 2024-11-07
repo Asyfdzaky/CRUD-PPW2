@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     // Grup rute khusus admin dengan middleware 'auth' dan 'admin'
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/buku/create', [BooksController::class, 'create'])->name('create');
+        Route::post('/buku-store', [BooksController::class, 'store'])->name('store.buku');
         Route::delete('/buku/{id}', [BooksController::class, 'destroy'])->name('destroy');
         Route::post('/store-buku', [BooksController::class, 'store'])->name('buku.store');
         Route::get('/buku/{id}/edit', [BooksController::class, 'edit'])->name('edit');
