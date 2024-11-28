@@ -23,6 +23,10 @@
             Create
         </a>
     </div>
+    <div class="mb-3">
+        <a href="{{route('reviews.create')}}" class="btn btn-secondary">
+            Review
+        </a>
     @endif
     @if (@session('status'))
         <script>
@@ -72,6 +76,7 @@
                     @endif
                     <!-- Tombol Detail yang sama untuk Admin dan User -->
                     <a href="{{ route('books.show', $book->id) }}" class="btn btn-primary btn-sm">Detail</a>
+                    <a href="{{ route('reviews.show', $book->id) }}" class="btn btn-secondary btn-sm">Review</a>
                 </td>   
             </tr>
             @endforeach

@@ -31,7 +31,7 @@
                 </div>
                 @endforeach
             </div>
-
+        
             <a href="{{ route('buku') }}" class="btn btn-secondary mt-3">Kembali</a>
         </div>
     </div>
