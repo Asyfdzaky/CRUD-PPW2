@@ -23,9 +23,11 @@
             Create
         </a>
     </div>
+    @endif
+    @if (Auth::User()->level == 'internal_reviewer' || Auth::User()->level == 'admin')
     <div class="mb-3">
         <a href="{{route('reviews.create')}}" class="btn btn-secondary">
-            Review
+            Review Buku 
         </a>
     @endif
     @if (@session('status'))
