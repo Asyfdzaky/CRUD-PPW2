@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Gallery extends Model
 {
-    protected $fillable = ['book_id', 'image'];
+    protected $fillable = ['book_id', 'image', 'caption'];
 
     // Relasi banyak ke satu ke Book
     public function book()

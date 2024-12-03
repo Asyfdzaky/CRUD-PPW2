@@ -12,7 +12,13 @@
             <label for="title" class="form-label">Title</label>
             <input type="text" name="title" id="title" class="form-control" placeholder="Enter book title" required>
         </div>
-        
+
+        <div class="mb-3 form-check">
+            <input type="hidden" name="editorial_pick" value="0">
+            <input type="checkbox" name="editorial_pick" id="editorial_pick" class="form-check-input" value="1">
+            <label for="editorial_pick" class="form-check-label">Jadikan Editorial Pick</label>
+        </div>
+
         <!-- Author -->
         <div class="mb-3">
             <label for="author" class="form-label">Author</label>
@@ -24,7 +30,12 @@
             <label for="harga" class="form-label">Harga</label>
             <input type="number" name="harga" id="harga" class="form-control" placeholder="Enter book price" required>
         </div>
-        
+        <!-- Diskon -->
+        <div class="mb-3">
+            <label for="discount" class="form-label">Diskon (%)</label>
+            <input type="number" name="discount" id="discount" class="form-control" placeholder="Masukkan diskon (0-100)">
+        </div>
+    
         <!-- Tanggal Terbit -->
         <div class="mb-3">
             <label for="tanggal_terbit" class="form-label">Tanggal Terbit</label>
@@ -35,9 +46,13 @@
             <label for="image" class="form-label">Image</label>
             <input type="file" name="image" id="image" class="form-control" required>
         </div>
-        <div id="gallery-images" class="form-group">
-            <label for="gallery_images">Tambah Gambar Galeri:</label>
-            <input type="file" name="gallery_images[]" class="form-control mb-2">
+        <div id="gallery-container">
+            <div class="gallery-item mb-3">
+                <label for="gallery_images">Tambah Gambar Galeri:</label>
+                <input type="file" name="gallery_images[]" class="form-control mb-2" required>
+                <label for="captions[]">Caption:</label>
+                <input type="text" name="captions[]" class="form-control" placeholder="Enter caption" required>
+            </div>
         </div>
         <button type="button" id="add-gallery" class="btn btn-secondary">Tambah Gambar Galeri</button>
         
@@ -55,14 +70,18 @@
         
     </form>
     <script>
-        // Menambahkan input file galeri gambar dinamis
+        // Tambahkan input file galeri dan caption secara dinamis
         document.getElementById('add-gallery').addEventListener('click', function() {
-            const galleryImagesDiv = document.getElementById('gallery-images');
-            const newInput = document.createElement('input');
-            newInput.setAttribute('type', 'file');
-            newInput.setAttribute('name', 'gallery_images[]');
-            newInput.classList.add('form-control', 'mb-2');
-            galleryImagesDiv.appendChild(newInput);
+            const galleryContainer = document.getElementById('gallery-container');
+            const newGalleryItem = document.createElement('div');
+            newGalleryItem.classList.add('gallery-item', 'mb-3');
+            newGalleryItem.innerHTML = `
+                <label for="gallery_images">Tambah Gambar Galeri:</label>
+                <input type="file" name="gallery_images[]" class="form-control mb-2" required>
+                <label for="captions[]">Caption:</label>
+                <input type="text" name="captions[]" class="form-control" placeholder="Enter caption" required>
+            `;
+            galleryContainer.appendChild(newGalleryItem);
         });
     </script>
 </div>

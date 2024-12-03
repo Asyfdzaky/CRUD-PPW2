@@ -9,7 +9,7 @@ class Books extends Model
 {
     use HasFactory;
     protected $table = 'books';
-    protected $fillable = ['title', 'author', 'harga', 'tanggal_terbit', 'image'];
+    protected $fillable = ['title', 'author', 'harga', 'tanggal_terbit', 'image', 'editorial_pick', 'discount'];
 
     public function galleries()
     {
@@ -19,5 +19,12 @@ class Books extends Model
     {
         return $this->hasMany(Review::class);
     }
+    public function getDiscountedPriceAttribute()
+{
+    if ($this->discount > 0) {
+        return $this->harga - ($this->harga * $this->discount / 100);
+    }
+    return $this->harga;
+}
     
 }

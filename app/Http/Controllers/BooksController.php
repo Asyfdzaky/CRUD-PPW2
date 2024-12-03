@@ -8,11 +8,18 @@ use Illuminate\Support\Facades\Storage;
 
 class BooksController extends Controller
 {
+    public function home()
+    {
+        $editorialPicks = Books::where('editorial_pick', true)->take(5)->get();
+        return view('home', compact('editorialPicks'));
+    }
+
     public function index(){
         $books = Books::all();
         $totalBooks = Books::count();
+        $editorialPicks = Books::where('editorial_pick', true)->take(3)->get();
         $totalHarga = Books::sum('harga');
-        return view('index', compact('books',  'totalBooks', 'totalHarga'));
+        return view('index', compact('books',  'totalBooks', 'totalHarga', 'editorialPicks'));
     }
 
     public function create(){
@@ -32,9 +39,13 @@ class BooksController extends Controller
         'title' => 'required|string',
         'author' => 'required|string|max:30',
         'harga' => 'required|numeric',
+        'discount' => 'nullable|numeric|min:0|max:100',
         'tanggal_terbit' => 'required|date',
         'image' => 'required|file|mimes:jpeg,jpg,png,gif|max:10000',
         'gallery_images.*' => 'required|file|mimes:jpeg,jpg,png,gif|max:10000', // Validation for multiple images
+        'caption.*' => 'required|string',
+        'editorial_pick' => 'boolean',
+
     ]);
 
     // Store the image
@@ -46,15 +57,18 @@ class BooksController extends Controller
         'author' => $request->author,
         'harga' => $request->harga,
         'tanggal_terbit' => $request->tanggal_terbit,
-        'image' => basename($imagePath)
+        'image' => basename($imagePath),
+        'editorial_pick' => $request->editorial_pick,
+        'discount' => $request->discount ?? 0,
     ]);
 
     // Store gallery images if any
     if ($request->hasFile('gallery_images')) {
-        foreach ($request->file('gallery_images') as $image) {
+        foreach ($request->file('gallery_images') as $index => $image) {
             $galleryPath = $image->store('public/galleries');
             $book->galleries()->create([
                 'image' => basename($galleryPath),
+                'caption' => $request->captions[$index], // Masalah pada $index
             ]);
         }
     }
@@ -91,50 +105,67 @@ public function destroy($id)
     {
         $book = Books::findOrFail($id);
     
+        // Validasi input
         $request->validate([
             'title' => 'required|string',
             'author' => 'required|string|max:30',
             'harga' => 'required|numeric',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'tanggal_terbit' => 'required|date',
             'image' => 'mimes:jpeg,jpg,png,gif|nullable|max:10000',
+            'gallery_images.*' => 'file|mimes:jpeg,jpg,png,gif|nullable|max:10000', // Validasi untuk beberapa gambar
+            'caption.*' => 'nullable|string',
+            'editorial_pick' => 'boolean',
         ]);
     
-        // Update the book data
+        // Data untuk memperbarui buku
         $data = [
             'title' => $request->title,
             'author' => $request->author,
             'harga' => $request->harga,
-            'tanggal_terbit' => $request->tanggal_terbit
+            'tanggal_terbit' => $request->tanggal_terbit,
+            'editorial_pick' => $request->editorial_pick ?? 0,
+            'discount' => $request->discount ?? 0,
         ];
     
-        // Handle the image update if a new one is uploaded
+        // Tangani pembaruan gambar buku jika ada gambar baru yang diunggah
         if ($request->hasFile('image')) {
-            // Delete the old image if it exists
+            // Hapus gambar lama jika ada
             if ($book->image) {
                 Storage::delete('public/img/' . $book->image);
             }
     
-            // Store the new image
+            // Simpan gambar baru
             $imagePath = $request->file('image')->store('public/img');
             $data['image'] = basename($imagePath);
         }
     
-        // Update the book data
+        // Perbarui data buku
         $book->update($data);
     
-        // Handle gallery image update
+        // Tangani gambar galeri baru yang diunggah
         if ($request->hasFile('gallery_images')) {
-            foreach ($request->file('gallery_images') as $image) {
+            // Simpan gambar galeri baru
+            foreach ($request->file('gallery_images') as $index => $image) {
                 $galleryPath = $image->store('public/galleries');
                 $book->galleries()->create([
                     'image' => basename($galleryPath),
-                    'book_id' => $book->id,
+                    'caption' => $request->captions[$index] ?? '', // Jika tidak ada caption, kosongkan
                 ]);
             }
         }
-    
+        
         return redirect('/buku')->with('status', 'Data Buku Berhasil Diubah');
     }
+
+    public function toggleEditorialPick($id)
+{
+    $book = Books::findOrFail($id);
+    $book->editorial_pick = !$book->editorial_pick;
+    $book->save();
+
+    return redirect()->back()->with('status', 'Editorial Pick berhasil diperbarui!');
+}
 }
 
 // public function search(Request $request){

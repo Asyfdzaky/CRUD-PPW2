@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('harga');
             $table->string('tanggal_terbit');
             $table->string('image');
+            $table->boolean('editorial_pick')->default(0);
+            $table->integer("discount")->default(0);
             $table->timestamps();
         });
     }

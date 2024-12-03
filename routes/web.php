@@ -7,10 +7,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\Auth\LoginRegisterController;
 
-Route::get('/', function () {
-    return view('home');
-});
-
+Route::get('/', [BooksController::class, 'home'])->name('home');
 Route::middleware('auth')->group(function () {
     Route::get('/buku', [BooksController::class, 'index'])->name('buku');
     Route::get('/buku/search', [BooksController::class, 'search'])->name('search');

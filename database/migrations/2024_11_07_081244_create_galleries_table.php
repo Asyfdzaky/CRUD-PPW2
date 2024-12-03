@@ -15,6 +15,7 @@ return new class extends Migration
         $table->id();
         $table->foreignId('book_id')->constrained()->onDelete('cascade'); // Relasi ke tabel books
         $table->string('image'); // Kolom untuk menyimpan gambar
+        $table->string('caption'); // Kolom untuk menyimpan caption
         $table->timestamps();
     });
     }

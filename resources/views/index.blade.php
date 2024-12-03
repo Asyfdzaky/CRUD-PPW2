@@ -16,6 +16,25 @@
                     @endif
                 </div>
     <!-- Tombol Create -->
+    <div class="editorial-picks-section">
+        <h4 class="fw-bold text-center text-primary mb-4">Editorial Picks</h4>
+        <div class="row g-4">
+            @foreach($editorialPicks as $book)
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="{{ asset('storage/img/' . $book->image) }}" class="card-img-top rounded-top" alt="{{ $book->title }}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-primary">{{ $book->title }}</h5>
+                        <p class="card-text text-secondary mb-3">{{ Str::limit($book->description, 80) }}</p>
+                        <div class="mt-auto">
+                            <p class="fw-bold text-danger">Rp. {{ number_format($book->harga, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
     
     @if (Auth::User()->level == 'admin')
     <div class="mb-3">
@@ -26,7 +45,7 @@
     @endif
     @if (Auth::User()->level == 'internal_reviewer' || Auth::User()->level == 'admin')
     <div class="mb-3">
-        <a href="{{route('reviews.create')}}" class="btn btn-secondary">
+        <a href="{{route('reviews.create')}}" class="btn btn-secondary ">
             Review Buku 
         </a>
     @endif
@@ -45,8 +64,11 @@
                 <th scope="col">Judul</th>
                 <th scope="col">Penulis</th>
                 <th scope="col">Harga</th>
+                <th scope="col">Diskon</th>
+                <th scope="col">Harga setelah Diskon</th>
                 <th scope="col">Tanggal Terbit</th>
                 <th scope="col">Aksi</th>
+
             </tr>
         </thead>
         <tbody>
@@ -62,24 +84,27 @@
                 <td>{{ $book->title }}</td>
                 <td>{{ $book->author }}</td>
                 <td>{{ "Rp" . number_format($book->harga, 2, ',', '.') }}</td>
+                <td>{{ $book->discount ? $book->discount . '%' : 'Tidak ada diskon' }}</td>
+                <td>Rp. {{ number_format($book->discounted_price, 0, ',', '.') }}</td>
                 <td>{{ $book->tanggal_terbit }}</td>
-
-                
                 <td>
-                    @if (Auth::User()->level == 'admin')
-                        <!-- Form untuk Delete -->
-                        <form action="{{ route('destroy', $book->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                        <!-- Tombol Edit -->
-                        <a href="{{ route('edit', $book->id) }}" class="btn btn-info btn-sm">Edit</a>
-                    @endif
-                    <!-- Tombol Detail yang sama untuk Admin dan User -->
-                    <a href="{{ route('books.show', $book->id) }}" class="btn btn-primary btn-sm">Detail</a>
-                    <a href="{{ route('reviews.show', $book->id) }}" class="btn btn-secondary btn-sm">Review</a>
-                </td>   
+                    <div class="d-flex justify-content-center">
+                        @if (Auth::User()->level == 'admin')
+                            <!-- Form untuk Delete -->
+                            <form action="{{ route('destroy', $book->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')" class="d-inline me-2">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                            <!-- Tombol Edit -->
+                            <a href="{{ route('edit', $book->id) }}" class="btn btn-info btn-sm me-2">Edit</a>
+                        @endif
+                        <!-- Tombol Detail yang sama untuk Admin dan User -->
+                        <a href="{{ route('books.show', $book->id) }}" class="btn btn-primary btn-sm me-2">Detail</a>
+                        <a href="{{ route('reviews.show', $book->id) }}" class="btn btn-secondary btn-sm">Review</a>
+                    </div>
+                </td>
+                   
             </tr>
             @endforeach
         </tbody>
